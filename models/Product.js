@@ -1,34 +1,39 @@
+const { getDatabase } = require("../database");
+
 class Product {
-  constructor(name, description, price) {
+  constructor(name, price) {
     this.name = name;
-    this.description = description;
     this.price = price;
   }
 
-  static #products = [];
-
-  static getAll() {
-    return this.#products;
+  save() {
+    const db = getDatabase();
+    return db.collection("products").insertOne(this);
   }
 
-  static add(product) {
-    this.#products.push(product);
+  static async getAll() {
+    const db = getDatabase();
+    return await db.collection("products").find().toArray();
   }
 
-  static findByName(name) {
-    return this.#products.find((product) => product.name === name);
+  static async getLast() {
+    const db = getDatabase();
+    return await db.collection("products")
+      .find()
+      .sort({ _id: -1 }) // son eklenen
+      .limit(1)
+      .toArray()
+      .then(products => products[0]);
   }
 
-  static deleteByName(name) {
-    this.#products = this.#products.filter((product) => product.name !== name);
+  static async findByName(name) {
+    const db = getDatabase();
+    return await db.collection("products").findOne({ name });
   }
 
-  static getLast() {
-    if (!this.#products.length) {
-      return;
-    }
-
-    return this.#products[this.#products.length - 1];
+  static async deleteByName(name) {
+    const db = getDatabase();
+    return await db.collection("products").deleteOne({ name });
   }
 }
 

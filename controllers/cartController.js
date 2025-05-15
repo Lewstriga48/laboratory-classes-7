@@ -3,9 +3,15 @@ const Cart = require("../models/Cart");
 
 const { STATUS_CODE } = require("../constants/statusCode");
 
-exports.addProductToCart = (request, response) => {
-  Product.add(request.body);
-  Cart.add(request.body.name);
+exports.addProductToCart = async (request, response) => {
+  const { name, price } = request.body;
+
+  // Ürünü MongoDB'ye ekle
+  const newProduct = new Product(name, parseFloat(price));
+  await newProduct.save();
+
+  // Sepetle ilgili işlem (şu an memory içi olabilir)
+  Cart.add(name);
 
   response.status(STATUS_CODE.FOUND).redirect("/products/new");
 };

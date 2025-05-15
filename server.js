@@ -11,6 +11,7 @@ const homeRoutes = require("./routing/home");
 const { STATUS_CODE } = require("./constants/statusCode");
 const { MENU_LINKS } = require("./constants/navigation");
 const cartController = require("./controllers/cartController");
+const { mongoConnect } = require('./database');
 
 const app = express();
 
@@ -19,6 +20,13 @@ app.set("views", "views");
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }));
+
+mongoConnect(() => {
+  app.listen(3000, () => {
+    console.log("Server is running on port 3000");
+  });
+});
+
 
 app.use((request, _response, next) => {
   const { url, method } = request;
@@ -45,3 +53,5 @@ app.use((request, response) => {
 });
 
 app.listen(PORT);
+
+
