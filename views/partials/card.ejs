@@ -5,7 +5,8 @@
     alt="Produkt 1"
   />
   <h3 class="card__title"><%= product.name %></h3>
-  <p class="card__description"><%= product.description %></p>
+  <p class="card__description"><%= product.description ? product.description : "Açıklama yok." %></p>
+
   <p class="card__price"><%= product.price %></p>
   <a href="/products/<%= product.name %>">Details</a>
   <button onclick="deleteProduct('<%= product.name %>')">Delete</button>
@@ -20,7 +21,7 @@
       method: "DELETE",
     }).then((response) => {
       if (response.ok) {
-        window.location.reload();
+        window.location.href ="/products";
       } else {
         alert("Error while removing product.");
       }
