@@ -1,9 +1,10 @@
 const { getDatabase } = require("../database");
 
 class Product {
-  constructor(name, price) {
+  constructor(name, price,description) {
     this.name = name;
     this.price = price;
+    this.description = description;
   }
 
   save() {
